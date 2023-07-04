@@ -8,22 +8,30 @@ import wifi
 import socketpool
 import ssl
 import smtp_circuitpython
+import digitalio
 from secrets import secrets
 
-HIGH_TEMP = 77  # Fahrenheit
-POLL_FREQ = 5   # seconds
-MAIL_DELAY = 60.0  # seconds
+
+
+HIGH_TEMP = 83  # Fahrenheit
+POLL_FREQ = 30   # seconds
+MAIL_DELAY = 600.0  # seconds
 
 i2c = busio.I2C(board.GP17, board.GP16)
 
 bmp = bmp180.BMP180(i2c)
 
 bmp.sea_level_pressure = 1013.25
+#bmp.sea_level_pressure = 1016.8
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 465
 
 last_violation = time.monotonic()
+
+led = digitalio.DigitalInOut(board.LED)
+led.direction = digitalio.Direction.OUTPUT
+led.value = False
 
 def send_mail(tempF):
     mail_to = secrets['gmail_to']
@@ -50,6 +58,7 @@ def get_tempF():
 try: 
     wifi.radio.connect(secrets['CIRCUITPY_WIFI_SSID'], 
                        secrets['CIRCUITPY_WIFI_PASSWORD'])
+    led.value = True
 except Exception as e:
     print("Error", e)
 
