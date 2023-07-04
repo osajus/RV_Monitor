@@ -5,3 +5,8 @@ Additional sensors might be added in the future.
 
 Currently:
 Pico Pi W with BMP180 on SDA=GP16, SCL=GP17
+
+secrets.py should be created using:
+secrets = {
+  'xxxx': 'xxxx',
+}
